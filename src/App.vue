@@ -66,7 +66,7 @@ if (!PRODUCTION) {
   warningTime = 10
 }
 
-const volumeInit = 0.3
+const volumeInit = 0.1
 const volumeStep = (1 - volumeInit) / warningTime
 
 export default {
