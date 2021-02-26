@@ -28,7 +28,7 @@
         {{ currentWord }}
       </div>
       <button
-        :disabled="!newWordBtnEnabled || showNoMoreWords"
+        :disabled="getNewWordsDisabled"
         class="p-2 focus:outline-none rounded-lg text-2xl shadow-md bg-color-default active:bg-green-600 my-3 disabled:opacity-50 varino"
         @click="getNewWord"
       >
@@ -96,6 +96,9 @@ export default {
       minutes = minutes < 10 ? '0' + minutes : minutes
       seconds = seconds < 10 ? '0' + seconds : seconds
       return minutes + ':' + seconds
+    },
+    getNewWordsDisabled () {
+      return !this.newWordBtnEnabled || this.showNoMoreWords
     }
   },
   methods: {
