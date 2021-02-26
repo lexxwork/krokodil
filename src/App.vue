@@ -82,10 +82,8 @@ export default {
       })
     }
   },
-  beforeUpdate () {
-    console.log('before update')
-  },
   renderTracked ({ key, target, type }) {
+    if (!DEBUG) return
     const targetValue = target.constructor.name === 'ComputedRefImpl' ? target.value : target
     console.log({ key, target: targetValue, type })
   },
