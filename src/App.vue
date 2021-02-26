@@ -74,8 +74,13 @@ export default {
       alarmColorStyle: []
     }
   },
-  mounted () {
-    console.log(process.env)
+  created () {
+    if (this.$workbox) {
+      this.$workbox.addEventListener('waiting', () => {
+        console.log('waiting')
+        this.$workbox.messageSW({ type: 'SKIP_WAITING' })
+      })
+    }
   },
   computed: {
     timer () {
@@ -86,9 +91,6 @@ export default {
       return minutes + ':' + seconds
     }
   },
-  // watch: {
-  //   time () {}
-  // },
   methods: {
     countDownStart () {
       if (this.intervalId) return
@@ -198,4 +200,5 @@ body,
 .varino {
   font-family: Varino;
 }
+
 </style>

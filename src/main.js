@@ -1,7 +1,8 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import './registerServiceWorker'
-// import './theme.css'
+import wb from './registerServiceWorker'
 import './assets/tailwind.css'
 
-createApp(App).mount('#app')
+const app = createApp(App)
+app.config.globalProperties.$workbox = wb
+app.mount('#app')
