@@ -17,7 +17,10 @@
         />
       </label>
     </div>
-    <div class="text-5xl my-3 p-2 varino" :class="{['text-red-500']: alarmStyle}">
+    <div
+      class="text-5xl my-3 p-2 varino"
+      :class="{ ['text-red-500']: alarmStyle }"
+    >
       {{ timer }}
     </div>
     <div class="flex flex-col items-center" style="min-height: 20rem">
@@ -49,16 +52,22 @@
 
 <script>
 const DEBUG = process.env.VUE_APP_DEBUG === 'true'
+const PRODUCTION = process.env.NODE_ENV === 'production'
 const log = (...args) => DEBUG && console.log(args)
 
 const countDownSound = new Audio(require('@/assets/sounds/stopwatch.mp3'))
 const alarmSound = new Audio(require('@/assets/sounds/alarm.mp3'))
 
-const defaultTime = 10
-const warningTime = 5
-const warningSoundTime = 3
+let defaultTime = 60 + 30
+let warningTime = 15
+
+if (!PRODUCTION) {
+  defaultTime = 20
+  warningTime = 10
+}
+
 const volumeInit = 0.3
-const volumeStep = 0.7 / warningTime
+const volumeStep = (1 - volumeInit) / warningTime
 
 export default {
   data () {
@@ -84,7 +93,8 @@ export default {
   },
   renderTracked ({ key, target, type }) {
     if (!DEBUG) return
-    const targetValue = target.constructor.name === 'ComputedRefImpl' ? target.value : target
+    const targetValue =
+      target.constructor.name === 'ComputedRefImpl' ? target.value : target
     console.log({ key, target: targetValue, type })
   },
   computed: {
@@ -109,12 +119,11 @@ export default {
 
       this.intervalId = setInterval(() => {
         this.time--
-        if (this.time <= warningTime && countDownSound.volume < 1) {
+        const volume = countDownSound.volume + volumeStep
+        if (this.time <= warningTime && (volume <= 1)) {
+          if (countDownSound.paused) countDownSound.play()
           if (!this.alarmStyle) this.alarmStyle = true
-          countDownSound.volume += volumeStep
-        }
-        if (this.time <= warningSoundTime && countDownSound.paused) {
-          countDownSound.play()
+          countDownSound.volume = volume
         }
         if (this.time <= 0) {
           this.newWordBtnEnabled = false
@@ -126,6 +135,7 @@ export default {
           }, 5000)
         }
       }, 1000)
+
       countDownSound.volume = volumeInit
       countDownSound.loop = true
     },
