@@ -86,7 +86,6 @@ export default {
   created () {
     if (this.$workbox) {
       this.$workbox.addEventListener('waiting', () => {
-        console.log('waiting')
         this.$workbox.messageSW({ type: 'SKIP_WAITING' })
       })
     }
@@ -95,7 +94,7 @@ export default {
     if (!DEBUG) return
     const targetValue =
       target.constructor.name === 'ComputedRefImpl' ? target.value : target
-    console.log({ key, target: targetValue, type })
+    log({ key, target: targetValue, type })
   },
   computed: {
     timer () {
@@ -179,19 +178,15 @@ export default {
       this.newWordBtnEnabled = true
       this.showNoMoreWords = false
 
-      log('cleared')
       const files = event.target.files
       if (files.length === 0) return
-      log('have file')
       const reader = new FileReader()
       reader.onload = e => {
-        log('loaded')
         const content = e.target.result
         this.wordsAll = content
           .split('\n')
           .map(line => line.trim())
           .filter(line => line.length > 1)
-        log('from loader', this.wordsAll)
       }
       reader.readAsText(files[0])
       event.target.value = ''
