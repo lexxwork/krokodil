@@ -17,7 +17,7 @@
         />
       </label>
     </div>
-    <div class="text-5xl my-3 p-2 varino" :class="alarmColorStyle">
+    <div class="text-5xl my-3 p-2 varino" :class="{['text-red-500']: alarmStyle}">
       {{ timer }}
     </div>
     <div class="flex flex-col items-center" style="min-height: 20rem">
@@ -71,7 +71,7 @@ export default {
       intervalId: null,
       newWordBtnEnabled: true,
       showNoMoreWords: false,
-      alarmColorStyle: []
+      alarmStyle: false
     }
   },
   created () {
@@ -81,6 +81,13 @@ export default {
         this.$workbox.messageSW({ type: 'SKIP_WAITING' })
       })
     }
+  },
+  beforeUpdate () {
+    console.log('before update')
+  },
+  renderTracked ({ key, target, type }) {
+    const targetValue = target.constructor.name === 'ComputedRefImpl' ? target.value : target
+    console.log({ key, target: targetValue, type })
   },
   computed: {
     timer () {
@@ -96,14 +103,14 @@ export default {
       if (this.intervalId) return
 
       this.wordsPassedCurrent = []
-      this.alarmColorStyle = []
+      this.alarmStyle = false
       this.time = defaultTime
 
       this.intervalId = setInterval(() => {
         this.time--
         if (this.time <= warningTime && countDownSound.volume < 1) {
+          if (!this.alarmStyle) this.alarmStyle = true
           countDownSound.volume += volumeStep
-          this.alarmColorStyle = ['text-red-500']
         }
         if (this.time <= warningSoundTime && countDownSound.paused) {
           countDownSound.play()
@@ -114,7 +121,7 @@ export default {
           this.countDownReset()
           setTimeout(() => {
             this.newWordBtnEnabled = true
-            this.alarmColorStyle = []
+            this.alarmStyle = false
           }, 5000)
         }
       }, 1000)
@@ -200,5 +207,4 @@ body,
 .varino {
   font-family: Varino;
 }
-
 </style>
