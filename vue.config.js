@@ -1,5 +1,5 @@
 
-const bgColor = '#70b900'
+const bgColor = '#5ce0bf'
 
 module.exports = {
   pwa: {

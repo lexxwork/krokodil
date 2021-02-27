@@ -1,9 +1,9 @@
 <template>
   <div
-    class="container relative bg-gray-800 rounded-lg text-white mx-auto lg:max-w-xl md:max-w-xl mt-10 mb-10 p-5 flex flex-col items-center select-none"
+    class="container relative mx-auto lg:max-w-xl md:max-w-xl mt-10 mb-10 p-5 flex flex-col items-center select-none"
   >
     <div
-      class="absolute top-2 right-2 bg-color-default h-10 w-10 text-center font-extrabold flex justify-center items-center rounded-full text-3xl"
+      class="absolute top-2 right-2 h-10 w-10 text-center font-extrabold flex justify-center items-center rounded-full text-3xl border-4 overflow-hidden"
     >
       <label for="upload-words">
         +
@@ -19,27 +19,32 @@
     </div>
     <div
       class="text-5xl my-3 p-2 varino"
-      :class="{ ['text-red-500']: alarmStyle }"
+      :class="{ ['text-pink-500']: alarmStyle }"
     >
       {{ timer }}
     </div>
     <div class="flex flex-col items-center" style="min-height: 20rem">
-      <div v-if="showNoMoreWords" class="mt-3 mb-2 p-2 border-4 border-red-700">
-        NO MORE WORDS
-      </div>
-      <div v-else class="my-4 h-9 font-bold text-3xl text-white">
-        {{ currentWord }}
+      <div class="my-4" style="min-height: 5rem">
+        <div
+          v-if="showNoMoreWords"
+          class=" bg-pink-500 p-4 rounded-md text-lg font-bold"
+        >
+          NO MORE WORDS
+        </div>
+        <div v-else class="p-4 font-bold text-3xl">
+          {{ currentWord }}
+        </div>
       </div>
       <button
         :disabled="getNewWordsDisabled"
-        class="p-2 focus:outline-none rounded-lg text-2xl shadow-md bg-color-default active:bg-green-600 my-3 disabled:opacity-50 varino"
+        class="p-2 focus:outline-none border-8 button rounded-xl shadow-md my-3 px-5 disabled:opacity-50 text-xl font-bold"
         @click="getNewWord"
       >
-        New word
+        NEW WORD
       </button>
       <ul class="list-none my-3 p-2 flex flex-col items-center">
         <li
-          class="font-bold text-xl text-gray-300"
+          class="font-bold text-xl"
           v-for="(word, i) in wordsPassedCurrent"
           :key="i"
         >
@@ -119,7 +124,7 @@ export default {
       this.intervalId = setInterval(() => {
         this.time--
         const volume = countDownSound.volume + volumeStep
-        if (this.time <= warningTime && (volume <= 1)) {
+        if (this.time <= warningTime && volume <= 1) {
           if (countDownSound.paused) countDownSound.play()
           if (!this.alarmStyle) this.alarmStyle = true
           countDownSound.volume = volume
@@ -197,12 +202,26 @@ export default {
 
 <style>
 :root {
-  --bg-color: #70b900;
+  --bg-color: #5ce0bf;
+  --border-color: #3f434b;
 }
 
 body,
-.bg-color-default {
+body * {
   background-color: var(--bg-color);
+  border-color: var(--border-color);
+  color: var(--border-color);
+}
+
+.container {
+  border-radius: 36px;
+  border: var(--border-color) solid 18px;
+}
+
+.button {
+  background-color: var(--border-color);
+  border-color: var(--border-color);
+  color: var(--bg-color);
 }
 
 @font-face {
