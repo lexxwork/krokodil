@@ -1,6 +1,6 @@
 <template>
   <div
-    class="container relative mx-auto lg:max-w-xl md:max-w-xl mt-10 mb-10 p-5 flex flex-col items-center select-none"
+    class="container relative mx-auto lg:max-w-xl md:max-w-xl mb-10 p-5 flex flex-col items-center select-none"
   >
     <div
       class="absolute top-2 right-2 h-10 w-10 text-center font-extrabold flex justify-center items-center rounded-full text-3xl border-4 overflow-hidden"
@@ -18,7 +18,7 @@
       </label>
     </div>
     <div
-      class="text-5xl my-3 p-2 varino"
+      class="text-5xl mb-3 mt-10 p-2 varino"
       :class="{ ['text-pink-500']: alarmStyle }"
     >
       {{ timer }}
@@ -213,9 +213,10 @@ body * {
   color: var(--border-color);
 }
 
-.container {
-  border-radius: 36px;
-  border: var(--border-color) solid 18px;
+@media (min-width: 780px) {
+  .container {
+    border: var(--border-color) solid 14px;
+  }
 }
 
 .button {
