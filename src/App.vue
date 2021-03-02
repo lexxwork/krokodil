@@ -1,9 +1,9 @@
 <template>
   <div
-    class="container relative mx-auto lg:max-w-xl md:max-w-xl mb-10 p-5 flex flex-col items-center select-none"
+    class="relative mx-auto lg:max-w-xl md:max-w-xl min-h-screen  pb-10 p-5 flex flex-col items-center select-none"
   >
     <div
-      class="absolute top-2 right-2 h-10 w-10 text-center font-extrabold flex justify-center items-center rounded-full text-3xl border-4 overflow-hidden"
+      class="absolute top-4 right-4 h-14 w-14 text-center font-extrabold flex justify-center items-center rounded-full text-5xl button overflow-hidden"
     >
       <label for="upload-words">
         +
@@ -18,8 +18,8 @@
       </label>
     </div>
     <div
-      class="text-5xl mb-3 mt-10 p-2 varino"
-      :class="{ ['text-pink-500']: alarmStyle }"
+      class="text-5xl mb-3 mt-10 pt-2 varino control"
+      :class="{ warning: alarmStyle }"
     >
       {{ timer }}
     </div>
@@ -27,22 +27,22 @@
       <div class="my-4" style="min-height: 5rem">
         <div
           v-if="showNoMoreWords"
-          class=" bg-pink-500 p-4 rounded-md text-lg font-bold"
+          class="warning text-gray-50 p-4 rounded-md text-lg font-bold"
         >
           NO MORE WORDS
         </div>
-        <div v-else class="p-4 font-bold text-3xl">
+        <div v-else v-show="currentWord" class="p-4 font-bold text-3xl control">
           {{ currentWord }}
         </div>
       </div>
       <button
         :disabled="getNewWordsDisabled"
-        class="p-2 focus:outline-none border-8 button rounded-xl shadow-md my-3 px-5 disabled:opacity-50 text-xl font-bold"
+        class="p-2 focus:outline-none button rounded-xl my-3 px-8 disabled:opacity-50 text-2xl font-bold"
         @click="getNewWord"
       >
         NEW WORD
       </button>
-      <ul class="list-none my-3 p-2 flex flex-col items-center">
+      <ul v-show="wordsPassedCurrent.length" class="list-none my-3 p-2 flex flex-col items-center control">
         <li
           class="font-bold text-xl"
           v-for="(word, i) in wordsPassedCurrent"
@@ -52,6 +52,7 @@
         </li>
       </ul>
     </div>
+    <div class="background"></div>
   </div>
 </template>
 
@@ -201,28 +202,59 @@ export default {
 </script>
 
 <style>
+
 :root {
-  --bg-color: #5ce0bf;
-  --border-color: #3f434b;
+  --bg-color: #424242;
+  /* --border-color: #3f434b; */
+  --color-green: #5ce0bf;
 }
 
-body,
-body * {
+body {
   background-color: var(--bg-color);
+}
+body * {
+  /* background-color: var(--bg-color); */
   border-color: var(--border-color);
-  color: var(--border-color);
+  /* color: var(--border-color); */
 }
 
-@media (min-width: 780px) {
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('/img/tile_background.png');
+  background-repeat: repeat;
+  filter: blur(1px);
+  z-index: -1;
+}
+
+.control {
+  background-color: var(--bg-color);
+  border-color: var(--bg-color);
+  @apply border-opacity-90;
+  @apply border-4;
+  @apply rounded-md;
+  @apply shadow-2xl;
+  @apply text-gray-50;
+
+}
+
+.warning {
+  @apply bg-pink-700;
+  @apply border-pink-700;
+}
+
+/* @media (min-width: 780px) {
   .container {
     border: var(--border-color) solid 14px;
   }
-}
+} */
 
 .button {
-  background-color: var(--border-color);
-  border-color: var(--border-color);
-  color: var(--bg-color);
+  @apply control;
+  background-color: var(--color-green);
 }
 
 @font-face {
