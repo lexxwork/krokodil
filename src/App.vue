@@ -1,9 +1,9 @@
 <template>
   <div
-    class="relative mx-auto lg:max-w-xl md:max-w-xl min-h-screen  pb-10 p-5 flex flex-col items-center select-none"
+    class="relative mx-auto md:max-w-3xl min-h-screen  pb-10 p-5 flex flex-col items-center select-none"
   >
     <div
-      class="absolute top-4 right-4 h-14 w-14 text-center font-extrabold flex justify-center items-center rounded-full text-5xl button overflow-hidden"
+      class="button add absolute top-4 right-4 h-14 w-14 font-extrabold text-5xl"
     >
       <label for="upload-words">
         +
@@ -37,12 +37,15 @@
       </div>
       <button
         :disabled="getNewWordsDisabled"
-        class="p-2 focus:outline-none button rounded-xl my-3 px-8 disabled:opacity-50 text-2xl font-bold"
+        class="p-2 focus:outline-none button rounded-xl my-3 px-8 text-2xl font-bold"
         @click="getNewWord"
       >
         NEW WORD
       </button>
-      <ul v-show="wordsPassedCurrent.length" class="list-none my-3 p-2 flex flex-col items-center control">
+      <ul
+        v-show="wordsPassedCurrent.length"
+        class="list-none my-3 p-2 flex flex-col items-center control"
+      >
         <li
           class="font-bold text-xl"
           v-for="(word, i) in wordsPassedCurrent"
@@ -201,22 +204,18 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 
-:root {
-  --bg-color: #424242;
-  /* --border-color: #3f434b; */
-  --color-green: #5ce0bf;
-}
+$color-green: #5ce0bf;
+$bg-color: #424242;
 
 body {
-  background-color: var(--bg-color);
+  background-color: $bg-color;
 }
-body * {
-  /* background-color: var(--bg-color); */
+
+/* body * {
   border-color: var(--border-color);
-  /* color: var(--border-color); */
-}
+} */
 
 .background {
   position: absolute;
@@ -226,19 +225,22 @@ body * {
   bottom: 0;
   background-image: url('/img/tile_background.png');
   background-repeat: repeat;
-  filter: blur(1px);
+  // filter: blur(1px);
   z-index: -1;
 }
 
 .control {
-  background-color: var(--bg-color);
-  border-color: var(--bg-color);
+  background-color: $bg-color;
+  border-color: $bg-color;
   @apply border-opacity-90;
   @apply border-4;
   @apply rounded-md;
   @apply shadow-2xl;
   @apply text-gray-50;
-
+  @apply inline-flex;
+  @apply justify-center;
+  @apply items-center;
+  @apply text-center;
 }
 
 .warning {
@@ -246,15 +248,23 @@ body * {
   @apply border-pink-700;
 }
 
-/* @media (min-width: 780px) {
-  .container {
-    border: var(--border-color) solid 14px;
-  }
-} */
-
 .button {
   @apply control;
-  background-color: var(--color-green);
+  background-color: $color-green;
+  &:disabled {
+    background-color: darken($color-green, 20%);
+    filter: grayscale(80%);
+  }
+  &:active {
+    background-color: lighten($color-green, 10%);
+    border-color: lighten($bg-color, 10%);
+  }
+}
+
+.add {
+  @extend .button;
+  @apply rounded-full;
+  @apply overflow-hidden;
 }
 
 @font-face {
