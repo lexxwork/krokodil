@@ -1,0 +1,18 @@
+{
+  "en": {
+    "newWord": "start!",
+    "newWordOneMore": "one more word",
+    "noMoreWords": "no more words"
+  },
+  "ru": {
+    "newWord": "начать!",
+    "newWordOneMore": "показать еще",
+    "noMoreWords": "слова закончились"
+
+  },
+  "uk": {
+    "newWord": "почати!",
+    "newWordOneMore": "показати ще",
+    "noMoreWords": "нових слів - нема"
+  }
+}

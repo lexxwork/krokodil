@@ -29,7 +29,7 @@
           v-if="showNoMoreWords"
           class="warning text-gray-50 p-4 rounded-md text-lg font-bold"
         >
-          NO MORE WORDS
+          {{noMoreWords}}
         </div>
         <div v-else v-show="currentWord" class="p-4 font-bold text-3xl control">
           {{ currentWord }}
@@ -40,7 +40,7 @@
         class="p-2 focus:outline-none button rounded-xl my-3 px-8 text-2xl font-bold"
         @click="getNewWord"
       >
-        NEW WORD
+        {{newWordOrMore}}
       </button>
       <ul
         v-show="wordsPassedCurrent.length"
@@ -60,6 +60,9 @@
 </template>
 
 <script>
+
+import i18n from '@/i18n'
+
 const DEBUG = process.env.VUE_APP_DEBUG === 'true'
 const PRODUCTION = process.env.NODE_ENV === 'production'
 const log = (...args) => DEBUG && console.log(args)
@@ -115,6 +118,13 @@ export default {
     },
     getNewWordsDisabled () {
       return !this.newWordBtnEnabled || this.showNoMoreWords
+    },
+    newWordOrMore () {
+      const propName = this.intervalId ? 'newWordOneMore' : 'newWord'
+      return i18n(propName).toUpperCase()
+    },
+    noMoreWords () {
+      return i18n('noMoreWords').toUpperCase()
     }
   },
   methods: {
