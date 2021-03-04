@@ -16,5 +16,7 @@ module.exports = {
       maskIcon: 'img/icons/android-chrome-maskable-192x192.png',
       msTileImage: 'img/icons/msapplication-icon-144x144.png'
     }
-  }
+  },
+  productionSourceMap: false,
+  css: { sourceMap: false }
 }
