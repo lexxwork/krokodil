@@ -245,7 +245,6 @@ body {
   @apply border-opacity-90;
   @apply border-4;
   @apply rounded-md;
-  @apply shadow-2xl;
   @apply text-gray-50;
   @apply inline-flex;
   @apply justify-center;
