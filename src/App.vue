@@ -1,38 +1,31 @@
 <template>
-  <div
-    class="relative mx-auto md:max-w-3xl min-h-screen  pb-10 p-5 flex flex-col items-center select-none"
-  >
-    <div
-      class="button add absolute top-4 right-4 h-14 w-14 font-extrabold text-5xl"
-    >
+  <div class="relative mx-auto md:max-w-3xl min-h-screen pb-10 p-5 container-col-center select-none">
+    <div class="button add absolute top-4 right-4 h-14 w-14 font-extrabold text-5xl">
       <label for="upload-words">
         +
-        <input
-          id="upload-words"
-          hidden
-          type="file"
-          accept=".txt"
-          @change="loadWords"
-          class="hidden"
-        />
+        <input id="upload-words" hidden type="file" accept=".txt" @change="loadWords" class="hidden" />
       </label>
     </div>
-    <div
-      class="text-5xl mb-3 mt-10 pt-2 varino control"
-      :class="{ warning: alarmStyle }"
-    >
+    <div class="text-5xl mb-3 mt-10 pt-2 varino control" :class="{ warning: alarmStyle }">
       {{ timer }}
     </div>
-    <div class="flex flex-col items-center" style="min-height: 20rem">
-      <div class="my-4" style="min-height: 5rem">
-        <div
-          v-if="showNoMoreWords"
-          class="warning text-gray-50 p-4 rounded-md text-lg font-bold"
-        >
-          {{noMoreWords}}
+    <div class="m-4 container-col-center">
+      <div class="mb-4 word-container">
+        <div v-if="showNoMoreWords" class="warning text-gray-50 p-4 rounded-md text-lg font-bold">
+          {{ noMoreWords }}
         </div>
-        <div v-else v-show="currentWord" class="p-4 font-bold text-3xl control">
-          {{ currentWord }}
+        <div
+          v-else
+          v-show="currentWord"
+          @click="toggleLockWord = !toggleLockWord"
+          class="font-bold text-3xl control"
+        >
+          <div class="p-4" v-show="toggleLockWord">{{ currentWord }}</div>
+          <div v-show="!toggleLockWord" class="lock">
+            <svg viewBox="0 0 372.826 372.826">
+              <use href="/img/secured-lock.svg#secured-lock"></use>
+            </svg>
+          </div>
         </div>
       </div>
       <button
@@ -40,17 +33,10 @@
         class="p-2 focus:outline-none button rounded-xl my-3 px-8 text-2xl font-bold"
         @click="getNewWord"
       >
-        {{newWordOrMore}}
+        {{ newWordOrMore }}
       </button>
-      <ul
-        v-show="wordsPassedCurrent.length"
-        class="list-none my-3 p-2 flex flex-col items-center control"
-      >
-        <li
-          class="font-bold text-xl"
-          v-for="(word, i) in wordsPassedCurrent"
-          :key="i"
-        >
+      <ul v-show="wordsPassedCurrent.length" class="list-none my-3 p-2 container-col-center control">
+        <li class="font-bold text-xl" v-for="(word, i) in wordsPassedCurrent" :key="i">
           {{ word }}
         </li>
       </ul>
@@ -60,7 +46,6 @@
 </template>
 
 <script>
-
 import i18n from '@/i18n'
 
 const DEBUG = process.env.VUE_APP_DEBUG === 'true'
@@ -92,7 +77,8 @@ export default {
       intervalId: null,
       newWordBtnEnabled: true,
       showNoMoreWords: false,
-      alarmStyle: false
+      alarmStyle: false,
+      toggleLockWord: true
     }
   },
   created () {
@@ -104,8 +90,7 @@ export default {
   },
   renderTracked ({ key, target, type }) {
     if (!DEBUG) return
-    const targetValue =
-      target.constructor.name === 'ComputedRefImpl' ? target.value : target
+    const targetValue = target.constructor.name === 'ComputedRefImpl' ? target.value : target
     log({ key, target: targetValue, type })
   },
   computed: {
@@ -173,15 +158,14 @@ export default {
         }
       }
       const newWords = this.wordsAll.filter(
-        word =>
-          !this.wordsPassedCurrent.includes(word) &&
-          !this.wordsPassedAll.includes(word)
+        (word) => !this.wordsPassedCurrent.includes(word) && !this.wordsPassedAll.includes(word)
       )
       if (!this.intervalId) {
         this.currentWord = null
       }
       if (newWords.length > 0) {
         this.currentWord = newWords[Math.floor(Math.random() * newWords.length)]
+        this.toggleLockWord = true
         this.countDownStart()
       } else {
         this.showNoMoreWords = true
@@ -200,12 +184,12 @@ export default {
       const files = event.target.files
       if (files.length === 0) return
       const reader = new FileReader()
-      reader.onload = e => {
+      reader.onload = (e) => {
         const content = e.target.result
         this.wordsAll = content
           .split('\n')
-          .map(line => line.trim())
-          .filter(line => line.length > 1)
+          .map((line) => line.trim())
+          .filter((line) => line.length > 1)
       }
       reader.readAsText(files[0])
       event.target.value = ''
@@ -215,7 +199,6 @@ export default {
 </script>
 
 <style lang="scss">
-
 $color-green: #5ce0bf;
 $bg-color: #424242;
 
@@ -223,9 +206,11 @@ body {
   background-color: $bg-color;
 }
 
-/* body * {
-  border-color: var(--border-color);
-} */
+.container-col-center {
+  @apply flex;
+  @apply flex-col;
+  @apply items-center;
+}
 
 .background {
   position: absolute;
@@ -267,6 +252,32 @@ body {
   &:active {
     background-color: lighten($color-green, 10%);
     border-color: lighten($bg-color, 10%);
+  }
+}
+
+.word-container {
+  @apply inline-flex;
+  @apply justify-center;
+  @apply items-center;
+  @apply text-center;
+  height: 100px;
+  width: auto;
+}
+
+.lock {
+  @apply control;
+  border-color: $color-green;
+  height: 100%;
+  width: 100%;
+  @apply p-1;
+  svg {
+    width: 80px;
+    height: 80px;
+  }
+  svg * {
+    width: 100%;
+    height: 100%;
+    fill: $color-green;
   }
 }
 
