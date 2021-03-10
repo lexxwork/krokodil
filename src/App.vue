@@ -1,46 +1,55 @@
 <template>
-  <div class="relative mx-auto md:max-w-3xl min-h-screen pb-10 p-5 container-col-center select-none">
-    <div class="button add absolute top-4 right-4 h-14 w-14 font-extrabold text-5xl">
+  <div class="container-main">
+    <div class="add">
       <label for="upload-words">
         +
-        <input id="upload-words" hidden type="file" accept=".txt" @change="loadWords" class="hidden" />
+        <input
+          id="upload-words"
+          hidden
+          type="file"
+          accept=".txt"
+          @change="loadWords"
+          style="display: none"
+        />
       </label>
     </div>
-    <div class="text-5xl mb-3 mt-10 pt-2 varino control" :class="{ warning: alarmStyle }">
+    <div
+      class="control main-item timer varino"
+      :class="{ 'warning-color': alarmStyle }"
+    >
       {{ timer }}
     </div>
-    <div class="m-4 container-col-center">
-      <div class="mb-4 word-container">
-        <div v-if="showNoMoreWords" class="warning text-gray-50 p-4 rounded-md text-lg font-bold">
-          {{ noMoreWords }}
+    <div class="main-item word-container">
+      <div v-if="showNoMoreWords" class="message warning">
+        {{ noMoreWords }}
+      </div>
+      <div
+        v-else
+        v-show="currentWord"
+        @click="toggleLockWord = !toggleLockWord"
+      >
+        <div class="word" v-show="toggleLockWord">
+          {{ currentWord }}
         </div>
-        <div
-          v-else
-          v-show="currentWord"
-          @click="toggleLockWord = !toggleLockWord"
-          class="font-bold text-3xl control"
-        >
-          <div class="p-4" v-show="toggleLockWord">{{ currentWord }}</div>
-          <div v-show="!toggleLockWord" class="lock">
-            <svg viewBox="0 0 372.826 372.826">
-              <use href="/img/secured-lock.svg#secured-lock"></use>
-            </svg>
-          </div>
+        <div v-show="!toggleLockWord" class="lock">
+          <svg viewBox="0 0 372.826 372.826">
+            <use href="/img/secured-lock.svg#secured-lock"></use>
+          </svg>
         </div>
       </div>
-      <button
-        :disabled="getNewWordsDisabled"
-        class="p-2 focus:outline-none button rounded-xl my-3 px-8 text-2xl font-bold"
-        @click="getNewWord"
-      >
-        {{ newWordOrMore }}
-      </button>
-      <ul v-show="wordsPassedCurrent.length" class="list-none my-3 p-2 container-col-center control">
-        <li class="font-bold text-xl" v-for="(word, i) in wordsPassedCurrent" :key="i">
-          {{ word }}
-        </li>
-      </ul>
     </div>
+    <button
+      :disabled="getNewWordsDisabled"
+      class="get-new-word main-item"
+      @click="getNewWord"
+    >
+      {{ newWordOrMore }}
+    </button>
+    <ul v-show="wordsPassedCurrent.length" class="words-list main-item">
+      <li v-for="(word, i) in wordsPassedCurrent" :key="i">
+        {{ word }}
+      </li>
+    </ul>
     <div class="background"></div>
   </div>
 </template>
@@ -201,98 +210,5 @@ export default {
 <style lang="scss">
 $color-green: #5ce0bf;
 $bg-color: #424242;
-
-body {
-  background-color: $bg-color;
-}
-
-.container-col-center {
-  @apply flex;
-  @apply flex-col;
-  @apply items-center;
-}
-
-.background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: url('/img/tile_background.png');
-  background-repeat: repeat;
-  // filter: blur(1px);
-  z-index: -1;
-}
-
-.control {
-  background-color: $bg-color;
-  border-color: $bg-color;
-  @apply border-opacity-90;
-  @apply border-4;
-  @apply rounded-md;
-  @apply text-gray-50;
-  @apply inline-flex;
-  @apply justify-center;
-  @apply items-center;
-  @apply text-center;
-}
-
-.warning {
-  @apply bg-pink-700;
-  @apply border-pink-700;
-}
-
-.button {
-  @apply control;
-  background-color: $color-green;
-  &:disabled {
-    background-color: darken($color-green, 20%);
-    filter: grayscale(80%);
-  }
-  &:active {
-    background-color: lighten($color-green, 10%);
-    border-color: lighten($bg-color, 10%);
-  }
-}
-
-.word-container {
-  @apply inline-flex;
-  @apply justify-center;
-  @apply items-center;
-  @apply text-center;
-  height: 100px;
-  width: auto;
-}
-
-.lock {
-  @apply control;
-  border-color: $color-green;
-  height: 100%;
-  width: 100%;
-  @apply p-1;
-  svg {
-    width: 80px;
-    height: 80px;
-  }
-  svg * {
-    width: 100%;
-    height: 100%;
-    fill: $color-green;
-  }
-}
-
-.add {
-  @extend .button;
-  @apply rounded-full;
-  @apply overflow-hidden;
-}
-
-@font-face {
-  font-family: 'Varino';
-  src: local('Varino'), url(./assets/fonts/varino.ttf) format('truetype');
-}
-
-.varino {
-  font-family: Varino;
-}
+@import "@/assets/app.scss";
 </style>

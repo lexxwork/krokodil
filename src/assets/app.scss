@@ -1,0 +1,138 @@
+@layer components {
+  body {
+    background-color: $bg-color;
+    @apply mx-auto text-gray-100;
+  }
+
+  .container-col-center {
+    @apply flex flex-col items-center;
+  }
+
+  .container-main {
+    @apply container-col-center;
+    @apply md:max-w-3xl;
+    @apply relative mx-auto min-h-screen py-10 pt-20 px-5 select-none;
+    @media (max-height: 452px) {
+      @apply py-3;
+    }
+  }
+
+  .main-item {
+    @apply flex-none mb-7;
+    @media (max-height: 452px) {
+      @apply mb-3;
+    }
+    &:last-child {
+      @apply mb-0;
+    }
+  }
+
+  .inline-flex-center {
+    @apply inline-flex justify-center items-center text-center;
+  }
+
+  .background {
+    @apply absolute top-0 left-0 right-0 bottom-0 bg-repeat;
+    background-image: url('/img/tile_background.png');
+    z-index: -1;
+  }
+
+  .control {
+    @apply inline-flex-center;
+    @apply border-4 rounded-md border-opacity-90;
+    background-color: $bg-color;
+    border-color: $bg-color;
+  }
+
+  .warning {
+    @apply bg-pink-700 border-pink-700;
+  }
+
+  .message {
+    @apply p-4 rounded-md text-lg font-bold;
+  }
+
+  .cursor-pointer {
+    cursor: pointer;
+    * {
+      cursor: pointer;
+    }
+  }
+
+  .button {
+    @apply control;
+    @apply cursor-pointer;
+    border-color: $color-green;
+    background-color: $bg-color;
+    color: $color-green;
+    &:disabled {
+      background-color: $bg-color;
+      filter: grayscale(80%);
+    }
+    &:active {
+      background-color: lighten($bg-color, 10%);
+      border-color: lighten($color-green, 10%);
+    }
+    &:focus {
+      outline: 2px solid transparent;
+      outline-offset: 2px;
+    }
+  }
+
+  .word-container {
+    @apply inline-flex-center;
+    @apply w-auto;
+    height: 100px;
+  }
+
+  .lock {
+    @apply button;
+    @apply p-1 h-full w-full;
+    svg {
+      width: 80px;
+      height: 80px;
+    }
+    svg * {
+      @apply h-full w-full;
+      fill: $color-green;
+    }
+  }
+
+  .timer {
+    @apply text-5xl pt-2 w-56;
+  }
+
+  .add {
+    @apply button;
+    @apply rounded-full overflow-hidden absolute top-4 right-4 h-14 w-14 font-bold text-5xl;
+  }
+
+  .word {
+    @apply control;
+    @apply cursor-pointer;
+    @apply font-bold text-3xl p-3;
+  }
+
+  .get-new-word {
+    @apply button;
+    @apply p-2 px-8 focus:outline-none rounded-xl text-2xl font-bold;
+  }
+
+  .words-list {
+    @apply container-col-center;
+    @apply control;
+    @apply list-none my-3 p-2;
+    li {
+      @apply font-bold text-xl;
+    }
+  }
+
+  @font-face {
+    font-family: 'Varino';
+    src: local('Varino'), url(./assets/fonts/varino.ttf) format('truetype');
+  }
+
+  .varino {
+    font-family: Varino;
+  }
+}
