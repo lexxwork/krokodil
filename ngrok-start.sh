@@ -1,0 +1,1 @@
+ngrok  http localhost:8080 --host-header rewrite
