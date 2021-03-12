@@ -1,61 +1,68 @@
 <template>
-  <div class="container-main">
-    <div class="add">
-      <label for="upload-words">
-        +
-        <input
-          id="upload-words"
-          hidden
-          type="file"
-          accept=".txt"
-          @change="loadWords"
-          style="display: none"
-        />
-      </label>
-    </div>
-    <div
-      class="control main-item timer varino"
-      :class="{ 'warning-color': alarmStyle }"
-    >
-      {{ timer }}
-    </div>
-    <div class="main-item word-container">
-      <div v-if="showNoMoreWords" class="message warning">
-        {{ noMoreWords }}
-      </div>
-      <div
-        v-else
-        v-show="currentWord"
-        @click="toggleLockWord = !toggleLockWord"
-      >
-        <div class="word" v-show="toggleLockWord">
-          {{ currentWord }}
+  <div id="parallax-scene" class="container-paralax">
+    <div class="item-paralax" data-depth="0">
+      <div class="container-main">
+        <div class="add">
+          <label for="upload-words">
+            +
+            <input
+              id="upload-words"
+              hidden
+              type="file"
+              accept=".txt"
+              @change="loadWords"
+              style="display: none"
+            />
+          </label>
         </div>
-        <div v-show="!toggleLockWord" class="lock">
-          <svg viewBox="0 0 372.826 372.826">
-            <use href="/img/secured-lock.svg#secured-lock"></use>
-          </svg>
+        <div
+          class="control main-item timer varino"
+          :class="{ 'warning-color': alarmStyle }"
+        >
+          {{ timer }}
         </div>
+        <div class="main-item word-container">
+          <div v-if="showNoMoreWords" class="control message warning">
+            {{ noMoreWords }}
+          </div>
+          <div
+            v-else
+            v-show="currentWord"
+            @click="toggleLockWord = !toggleLockWord"
+          >
+            <div class="word" v-show="toggleLockWord">
+              {{ currentWord }}
+            </div>
+            <div v-show="!toggleLockWord" class="lock">
+              <svg viewBox="0 0 372.826 372.826">
+                <use href="/img/secured-lock.svg#secured-lock"></use>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <button
+          :disabled="getNewWordsDisabled"
+          class="get-new-word main-item"
+          @click="getNewWord"
+        >
+          {{ newWordOrMore }}
+        </button>
+        <ul v-show="wordsPassedCurrent.length" class="words-list main-item">
+          <li v-for="(word, i) in wordsPassedCurrent" :key="i">
+            {{ word }}
+          </li>
+        </ul>
       </div>
     </div>
-    <button
-      :disabled="getNewWordsDisabled"
-      class="get-new-word main-item"
-      @click="getNewWord"
-    >
-      {{ newWordOrMore }}
-    </button>
-    <ul v-show="wordsPassedCurrent.length" class="words-list main-item">
-      <li v-for="(word, i) in wordsPassedCurrent" :key="i">
-        {{ word }}
-      </li>
-    </ul>
-    <div class="background"></div>
+    <div class="item-paralax" data-depth="0.2" style="z-index: -1;">
+      <div class="background"></div>
+    </div>
   </div>
 </template>
 
 <script>
 import i18n from '@/i18n'
+import Parallax from 'parallax-js'
 
 const DEBUG = process.env.VUE_APP_DEBUG === 'true'
 const PRODUCTION = process.env.NODE_ENV === 'production'
@@ -96,6 +103,17 @@ export default {
         this.$workbox.messageSW({ type: 'SKIP_WAITING' })
       })
     }
+  },
+  mounted () {
+    const scene = document.getElementById('parallax-scene')
+    this.$parallax = new Parallax(scene, {
+      pointerEvents: true,
+      frictionX: 0.6,
+      frictionY: 0.6
+    })
+  },
+  unmounted () {
+    this.$parallax.destroy()
   },
   renderTracked ({ key, target, type }) {
     if (!DEBUG) return
