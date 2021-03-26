@@ -207,7 +207,7 @@ export default {
         await this.$idb.clearData()
         await this.$idb.addWords(words)
       } catch (error) {
-        console.warn(error)
+        log.warn(error)
       }
       this.newWordBtnEnabled = true
     }
