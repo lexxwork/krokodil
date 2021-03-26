@@ -5,46 +5,28 @@
         <div class="add">
           <label for="upload-words">
             +
-            <input
-              id="upload-words"
-              hidden
-              type="file"
-              accept=".txt"
-              @change="loadWords"
-              style="display: none"
-            />
+            <input id="upload-words" hidden type="file" accept=".txt" @change="loadWords" style="display: none" />
           </label>
         </div>
-        <div
-          class="control main-item timer varino"
-          :class="{ 'warning-color': alarmStyle }"
-        >
+        <div class="control main-item timer varino" :class="{ 'warning-color': alarmStyle }">
           {{ timer }}
         </div>
         <div class="main-item word-container">
           <div v-if="showNoMoreWords" class="control message warning">
             {{ noMoreWords }}
           </div>
-          <div
-            v-else
-            v-show="currentWord"
-            @click="toggleLockWord = !toggleLockWord"
-          >
-            <div class="word" v-show="toggleLockWord">
+          <div v-else v-show="currentWord" @click="toggleLockWord = !toggleLockWord">
+            <div class="word" v-show="!toggleLockWord">
               {{ currentWord }}
             </div>
-            <div v-show="!toggleLockWord" class="lock">
+            <div v-show="toggleLockWord" class="lock">
               <svg viewBox="0 0 372.826 372.826">
                 <use href="/img/secured-lock.svg#secured-lock"></use>
               </svg>
             </div>
           </div>
         </div>
-        <button
-          :disabled="getNewWordsDisabled"
-          class="get-new-word main-item"
-          @click="getNewWord"
-        >
+        <button :disabled="getNewWordsDisabled" class="get-new-word main-item" @click="getRandomWord">
           {{ newWordOrMore }}
         </button>
         <ul v-show="wordsPassedCurrent.length" class="words-list main-item">
@@ -54,7 +36,7 @@
         </ul>
       </div>
     </div>
-    <div class="item-paralax" data-depth="0.2" style="z-index: -1;">
+    <div class="item-paralax" data-depth="0.2" style="z-index: -1">
       <div class="background"></div>
     </div>
   </div>
@@ -85,16 +67,14 @@ const volumeStep = (1 - volumeInit) / warningTime
 export default {
   data () {
     return {
-      wordsAll: [],
       currentWord: null,
       wordsPassedCurrent: [],
-      wordsPassedAll: [],
       time: 0,
       intervalId: null,
       newWordBtnEnabled: true,
       showNoMoreWords: false,
       alarmStyle: false,
-      toggleLockWord: true
+      toggleLockWord: false
     }
   },
   created () {
@@ -177,49 +157,59 @@ export default {
       countDownSound.pause()
       countDownSound.currentTime = 0
     },
-    getNewWord () {
+    async getRandomWord () {
       if (this.currentWord) {
-        this.wordsPassedAll.push(this.currentWord)
         if (!this.wordsPassedCurrent.includes(this.currentWord)) {
           this.wordsPassedCurrent.push(this.currentWord)
         }
       }
-      const newWords = this.wordsAll.filter(
-        (word) => !this.wordsPassedCurrent.includes(word) && !this.wordsPassedAll.includes(word)
-      )
       if (!this.intervalId) {
         this.currentWord = null
       }
-      if (newWords.length > 0) {
-        this.currentWord = newWords[Math.floor(Math.random() * newWords.length)]
-        this.toggleLockWord = true
-        this.countDownStart()
-      } else {
+      this.newWordBtnEnabled = false
+
+      const record = await this.$idb.getWordRandom()
+      if (!record) {
         this.showNoMoreWords = true
         this.countDownReset()
+        return
       }
+      this.currentWord = record.word
+      this.toggleLockWord = false
+      this.countDownStart()
+      this.newWordBtnEnabled = true
+
+      this.$idb.deleteWord(record)
     },
-    loadWords (event) {
+    async loadWords (event) {
       alarmSound.pause()
       alarmSound.currentTime = 0
       this.currentWord = null
       this.wordsPassedCurrent = []
       this.countDownReset()
-      this.newWordBtnEnabled = true
+      this.newWordBtnEnabled = false
       this.showNoMoreWords = false
 
-      const files = event.target.files
-      if (files.length === 0) return
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        const content = e.target.result
-        this.wordsAll = content
+      try {
+        const files = event.target.files
+        if (files.length === 0) return
+        const reader = new FileReader()
+        reader.readAsText(files[0])
+        event.target.value = ''
+        const content = await new Promise((resolve) => {
+          reader.onload = (e) => resolve(e.target.result)
+        })
+        let words = content
           .split('\n')
           .map((line) => line.trim())
           .filter((line) => line.length > 1)
+        words = Array.from(new Set(words))
+        await this.$idb.clearData()
+        await this.$idb.addWords(words)
+      } catch (error) {
+        console.warn(error)
       }
-      reader.readAsText(files[0])
-      event.target.value = ''
+      this.newWordBtnEnabled = true
     }
   }
 }
