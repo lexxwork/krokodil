@@ -2,17 +2,43 @@
   "en": {
     "newWord": "start!",
     "newWordOneMore": "one more word",
-    "noMoreWords": "no more words"
+    "noMoreWords": "no more words",
+    "playersCount": "players count",
+    "wordsForPlayer": "words / player",
+    "player": "player",
+    "addNewWord": "add new word",
+    "add": "add",
+    "check": "check",
+    "next": "next",
+    "nextPlayer": "next player",
+    "close": "close"
   },
   "ru": {
     "newWord": "начать!",
     "newWordOneMore": "показать еще",
-    "noMoreWords": "слова закончились"
-
+    "noMoreWords": "слова закончились",
+    "playersCount": "количество игроков",
+    "wordsForPlayer": "количество слов на игрока",
+    "player": "игрок",
+    "addNewWord": "добавить новое слово",
+    "add": "добавить",
+    "check": "проверить",
+    "next": "дальше",
+    "nextPlayer": "следующий игрок",
+    "close": "закрыть"
   },
   "uk": {
     "newWord": "почати!",
     "newWordOneMore": "показати ще",
-    "noMoreWords": "нових слів - нема"
+    "noMoreWords": "нових слів - нема",
+    "playersCount": "кількість гравців",
+    "wordsForPlayer": "кількість слів на гравця",
+    "player": "гравець",
+    "addNewWord": "додати слово",
+    "add": "додати",
+    "check": "перевірити",
+    "next": "далі",
+    "nextPlayer": "наступний гравець",
+    "close": "закрити"
   }
 }

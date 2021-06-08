@@ -2,13 +2,13 @@
   <div id="parallax-scene" class="container-paralax">
     <div class="item-paralax" data-depth="0">
       <div class="container-main">
-        <div class="add">
+        <div class="add" @click="openWizard">
           <label for="upload-words">
             +
-            <input id="upload-words" hidden type="file" accept=".txt" @change="loadWords" style="display: none" />
+            <!-- <input id="upload-words" hidden type="file" accept=".txt" @change="loadWords" style="display: none" /> -->
           </label>
         </div>
-        <div class="control main-item timer varino" :class="{ 'warning-color': alarmStyle }">
+        <div class="control main-item timer font-varino" :class="{ 'warning-color': alarmStyle }">
           {{ timer }}
         </div>
         <div class="main-item word-container">
@@ -26,7 +26,7 @@
             </div>
           </div>
         </div>
-        <button :disabled="getNewWordsDisabled" class="get-new-word main-item" @click="getRandomWord">
+        <button :disabled="getNewWordsDisabled" class="btn-primer main-item" @click="getRandomWord">
           {{ newWordOrMore }}
         </button>
         <ul v-show="wordsPassedCurrent.length" class="words-list main-item">
@@ -40,11 +40,13 @@
       <div class="background"></div>
     </div>
   </div>
+  <words-wizard ref="wizard" />
 </template>
 
 <script>
 import i18n from '@/i18n'
 import Parallax from 'parallax-js'
+import WordsWizard from './components/WordsWizard.vue'
 
 const DEBUG = process.env.VUE_APP_DEBUG === 'true'
 const PRODUCTION = process.env.NODE_ENV === 'production'
@@ -65,6 +67,7 @@ const volumeInit = 0.1
 const volumeStep = (1 - volumeInit) / warningTime
 
 export default {
+  components: { WordsWizard },
   data () {
     return {
       currentWord: null,
@@ -210,13 +213,26 @@ export default {
         log.warn(error)
       }
       this.newWordBtnEnabled = true
+    },
+    async openWizard () {
+      alarmSound.pause()
+      alarmSound.currentTime = 0
+      this.currentWord = null
+      this.wordsPassedCurrent = []
+      this.countDownReset()
+      this.newWordBtnEnabled = false
+      const words = await this.$refs.wizard.open()
+      if (words && words.length > 0) {
+        await this.$idb.clearData()
+        await this.$idb.addWords(words)
+        this.showNoMoreWords = false
+        this.newWordBtnEnabled = true
+      }
     }
   }
 }
 </script>
 
 <style lang="scss">
-$color-green: #5ce0bf;
-$bg-color: #424242;
 @import "@/assets/app.scss";
 </style>

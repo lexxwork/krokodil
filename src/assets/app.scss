@@ -1,9 +1,35 @@
-@layer components {
+$color-green: #5ce0bf;
+$bg-color: #424242;
+
+@layer base {
+
+  @font-face {
+    font-family: 'Varino';
+    src: local('Varino'), url(~@/assets/fonts/varino.ttf) format('truetype');
+  }
+
+  @font-face {
+    font-family: 'Exo2';
+    src: local('Exo2'), url(~@/assets/fonts/exo2-regular.ttf) format('truetype');
+  }
+
   body {
     background-color: $bg-color;
     @apply mx-auto text-gray-100;
   }
 
+  body * {
+    @apply font-exo2;
+    @apply subpixel-antialiased;
+  }
+  
+  .varino {
+    @apply font-varino;
+  }
+}
+
+@layer components {
+  
   .container-col-center {
     @apply flex flex-col items-center;
   }
@@ -132,9 +158,9 @@
     @apply font-bold text-3xl p-3;
   }
 
-  .get-new-word {
+  .btn-primer {
     @apply button;
-    @apply p-2 px-8 focus:outline-none rounded-xl text-2xl font-bold;
+    @apply p-2 px-8 focus:outline-none rounded-xl text-2xl font-bold uppercase;
   }
 
   .words-list {
@@ -146,12 +172,32 @@
     }
   }
 
-  @font-face {
-    font-family: 'Varino';
-    src: local('Varino'), url(./assets/fonts/varino.ttf) format('truetype');
+  .input-container {
+    @apply flex flex-col items-center mx-4 mb-3;
+    label {
+      color: $color-green;
+      @apply font-bold text-xl;
+    }
+    input {
+      @apply control;
+      @apply p-2 px-8 text-2xl font-bold;
+      outline: none;
+    }
+    input:active,
+    input:focus {
+      transition: border-color 0.22s;
+      border-color: $color-green;
+    }
   }
 
-  .varino {
-    font-family: Varino;
+  /* Chrome, Safari, Edge, Opera */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  /* Firefox */
+  input[type='number'] {
+    -moz-appearance: textfield;
   }
 }
