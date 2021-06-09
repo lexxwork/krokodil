@@ -34,6 +34,7 @@
                   min="3"
                   max="20"
                   @keypress.enter="addWord"
+                  autocomplete="off"
                 />
               </div>
             </div>
