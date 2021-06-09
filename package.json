@@ -1,6 +1,6 @@
 {
   "name": "krokodil",
-  "version": "0.2.6",
+  "version": "0.3.1",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
