@@ -1,7 +1,7 @@
 <template>
   <teleport to="body">
-    <div v-if="isOpen" class="popup-backdrop" @click="showCompleted && confirm()" @touch="showCompleted && confirm()">
-      <div class="popup-container" @click.stop>
+    <div v-if="isOpen" class="popup-backdrop" @click="showCompleted && confirm()">
+      <div class="popup-container">
         <div class="container-col-center">
           <div class="steps-container">
             <div v-if="step === 0" class="step0-container">
@@ -40,11 +40,13 @@
             <div v-if="showCompleted" @click="confirm" class="message-completed">{{ $options.i18n.completed }}</div>
           </div>
           <div class="steps-button-container">
-            <button v-if="showAdd && !showCompleted" @click="addWord" class="btn-primer">
+            <button v-if="showAdd && !showCompleted" @click.stop="addWord" class="btn-primer">
               {{ $options.i18n.add }}
             </button>
-            <button v-if="showNext && !showCompleted" @click="next" class="btn-primer">{{ nextValue }}</button>
-            <button @click="close" v-if="!showCompleted" class="btn-primer">{{ $options.i18n.close }}</button>
+            <button v-if="showNext && !showCompleted" @click.stop="next" class="btn-primer">{{ nextValue }}</button>
+            <button @click="showCompleted ? confirm() : close()" class="btn-primer">
+              {{ $options.i18n.close }}
+            </button>
           </div>
         </div>
       </div>

@@ -2,11 +2,11 @@
   <div id="parallax-scene" class="container-paralax">
     <div class="item-paralax" data-depth="0">
       <div class="container-main pt-20">
-        <div class="add" @click="openWizard">
+        <div class="menu" @click="openWizard">
           <svg width="48px" height="48px" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-            <path d="M41,14H7a2,2,0,0,1,0-4H41A2,2,0,0,1,41,14Z" fill="#5ce0bf"></path>
-            <path d="M41,26H7a2,2,0,0,1,0-4H41A2,2,0,0,1,41,26Z" fill="#5ce0bf"></path>
-            <path d="M41,38H7a2,2,0,0,1,0-4H41A2,2,0,0,1,41,38Z" fill="#5ce0bf"></path>
+            <path d="M41,14H7a2,2,0,0,1,0-4H41A2,2,0,0,1,41,14Z"></path>
+            <path d="M41,26H7a2,2,0,0,1,0-4H41A2,2,0,0,1,41,26Z"></path>
+            <path d="M41,38H7a2,2,0,0,1,0-4H41A2,2,0,0,1,41,38Z"></path>
           </svg>
         </div>
         <div class="timer" :class="{ 'warning-color': alarmStyle }">

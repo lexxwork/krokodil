@@ -147,9 +147,10 @@ $bg-color: #424242;
     @apply main-item control text-6xl pt-2 font-varino;
   }
 
-  .add {
+  .menu {
     @apply button;
     @apply rounded-full overflow-hidden absolute top-4 right-4 h-14 w-14 font-bold text-5xl;
+    fill: $color-green;
   }
 
   .word {
