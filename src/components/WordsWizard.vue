@@ -1,6 +1,6 @@
 <template>
   <teleport to="body">
-    <div v-if="isOpen" class="popup-backdrop">
+    <div v-if="isOpen" class="popup-backdrop" @click="showCompleted && confirm()" @touch="showCompleted && confirm()">
       <div class="popup-container" @click.stop>
         <div class="container-col-center">
           <div class="steps-container">
@@ -26,15 +26,26 @@
               <br />
               <div class="input-container">
                 <label for="new-word">{{ $options.i18n.addNewWord }}:</label>
-                <input id="new-word" type="text" v-model="word" min="3" max="20" @keypress.enter="addWord" />
+                <input
+                  id="new-word"
+                  type="text"
+                  v-model.trim="word"
+                  @input="word = $event.target.value.trim()"
+                  min="3"
+                  max="20"
+                  @keypress.enter="addWord"
+                />
               </div>
             </div>
+            <div v-if="showCompleted" @click="confirm" class="message-completed">{{ $options.i18n.completed }}</div>
           </div>
           <div class="steps-button-container">
-            <button v-if="showAdd" @click="addWord" class="btn-primer">{{ $options.i18n.add }}</button>
-            <button v-if="showNext" @click="next" class="btn-primer">{{ nextValue }}</button>
+            <button v-if="showAdd && !showCompleted" @click="addWord" class="btn-primer">
+              {{ $options.i18n.add }}
+            </button>
+            <button v-if="showNext && !showCompleted" @click="next" class="btn-primer">{{ nextValue }}</button>
+            <button @click="close" v-if="!showCompleted" class="btn-primer">{{ $options.i18n.close }}</button>
           </div>
-          <button @click="close" class="btn-primer">{{ $options.i18n.close }}</button>
         </div>
       </div>
     </div>
@@ -66,16 +77,16 @@ function minMaxValueCorrect (valueOrigin, minValue = 0, maxValue = 100) {
 
 const GAMEWORDSLIMIT = 30
 const PLAYERSLIMIT = 20
-const PLAYERWORDS_MIN = 3
+const PLAYERWORDS_MIN = 2
 
 const i18nWords = Object.fromEntries(
-  ['playersCount', 'wordsForPlayer', 'player', 'addNewWord', 'add', 'nextPlayer', 'check', 'close', 'next']
+  ['playersCount', 'wordsForPlayer', 'player', 'addNewWord', 'add', 'nextPlayer', 'check', 'close', 'next', 'completed']
     .map(x => [x, i18n(x)])
 )
 
 const initialData = () => {
   return {
-    playersMax: NaN,
+    playersMax: undefined,
     gameWordsMax: 0,
     playerCnt: 1,
     playerWordsMax: PLAYERWORDS_MIN,
@@ -86,6 +97,7 @@ const initialData = () => {
     isOpen: false,
     showNext: true,
     showAdd: false,
+    showCompleted: false,
     nextValue: i18nWords.next,
     word: ''
   }
@@ -170,7 +182,11 @@ export default {
               this.gameWords.splice(this.gameWordsMax, this.gameWords.length - this.gameWordsMax)
             }
             // this.$emit('words', this.words)
-            this.confirm()
+            this.showCompleted = true
+            // setTimeout(() => {
+            //   this.showCompleted = false
+            //   this.confirm()
+            // }, 3000)
           }
         } else if (this.playerCompleted) {
           this.playerCompleted = false
@@ -182,12 +198,13 @@ export default {
       if (!this.showAdd) {
         return
       }
-      if (this.word && !this.playerWords.includes(this.word)) {
-        this.playerWords.push(this.word)
+      if (this.word && !this.playerWords.includes(this.word.toLowerCase())) {
+        this.playerWords.push(this.word.toLowerCase())
         this.word = ''
         this.showAdd = false
-        if (this.playerWords.length > this.playerWordsMax) {
-          if (this.playerWords.length >= this.playerWordsMax) {
+        // debugger
+        if (this.playerWords.length >= this.playerWordsMax) {
+          if (this.playerWords.length > this.playerWordsMax) {
             this.playerWords.splice(this.playerWordsMax, this.playerWords.length - this.playerWordsMax)
           }
           this.gameWords = this.gameWords.concat(this.playerWords)
@@ -195,7 +212,7 @@ export default {
           this.playerCnt++
           this.nextValue = this.playerCnt > this.playersMax
             ? this.$options.i18n.check
-            : this.$options.i18n.nextPlayer + this.playerCnt
+            : this.$options.i18n.nextPlayer + ' #' + this.playerCnt
           this.playerCompleted = true
           this.showNext = true
         }
@@ -216,29 +233,59 @@ export default {
   right: 0;
   background-color: rgba(66, 66, 66, 0.92);
   z-index: 100;
+  min-width: 16rem;
 }
 
 .popup-container {
+  width: 100%;
   z-index: 101;
   left: 50%;
   transform: translateX(-50%);
   position: fixed;
-  // min-width: 36rem;
+  @apply px-2;
 }
 
 .steps-container {
-  width: 100%;
-  height: 14rem;
   @apply main-item;
+  width: 100%;
+  min-height: 14rem;
+  @media (max-height: 452px) {
+    min-height: auto;
+  }
+}
+
+.message-completed {
+  @apply control p-4 rounded-md text-4xl font-bold;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .step0-container {
   width: 100%;
-  @apply my-4 flex flex-col justify-center ;
+  @apply my-4 flex flex-col justify-center;
+  @media (max-height: 452px) {
+    @apply flex-row;
+  }
 }
 
 .steps-button-container {
-  @apply h-14 main-item;
+  @apply flex flex-col items-center;
+  @media (min-height: 452px) {
+    @apply h-36;
+    button:last-of-type {
+      @apply mt-6;
+      margin-top: auto;
+    }
+  }
+  @media (max-height: 452px) {
+    @apply flex-row h-auto;
+    button {
+      @apply mx-2;
+    }
+  }
+  // main-item;
 }
 
 .caption {

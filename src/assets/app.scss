@@ -48,7 +48,7 @@ $bg-color: #424242;
   .container-main {
     @apply container-col-center;
     @apply md:max-w-3xl;
-    @apply relative mx-auto min-h-screen py-10 pt-20 px-5 select-none;
+    @apply relative mx-auto min-h-screen py-10 px-5 select-none;
     @media (max-height: 452px) {
       @apply py-3;
     }
@@ -83,7 +83,7 @@ $bg-color: #424242;
 
   .control {
     @apply inline-flex-center;
-    @apply border-4 rounded-md border-opacity-90;
+    @apply border-2 rounded-md border-opacity-90;
     background-color: $bg-color;
     border-color: $bg-color;
     box-shadow: 4px 10px 10px 3px rgba(0, 0, 0, 0.3);
@@ -144,7 +144,7 @@ $bg-color: #424242;
   }
 
   .timer {
-    @apply text-5xl pt-2 w-56;
+    @apply main-item control text-6xl pt-2 font-varino;
   }
 
   .add {
@@ -160,7 +160,7 @@ $bg-color: #424242;
 
   .btn-primer {
     @apply button;
-    @apply p-2 px-8 focus:outline-none rounded-xl text-2xl font-bold uppercase;
+    @apply p-2 px-5 focus:outline-none rounded-xl text-2xl font-bold uppercase;
   }
 
   .words-list {
@@ -176,17 +176,19 @@ $bg-color: #424242;
     @apply flex flex-col items-center mx-4 mb-3;
     label {
       color: $color-green;
-      @apply font-bold text-xl;
+      @apply font-bold text-xl text-center;
     }
     input {
       @apply control;
-      @apply p-2 px-8 text-2xl font-bold;
-      outline: none;
+      border-color: $color-green;
+      @apply p-2 px-5 text-2xl font-bold outline-none;
+      // outline: none;
     }
     input:active,
     input:focus {
-      transition: border-color 0.22s;
-      border-color: $color-green;
+      transition: border-width 0.22s;
+      // border-color: $color-green;
+      @apply border-4;
     }
   }
 
@@ -200,4 +202,5 @@ $bg-color: #424242;
   input[type='number'] {
     -moz-appearance: textfield;
   }
+
 }

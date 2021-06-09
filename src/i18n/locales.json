@@ -11,6 +11,7 @@
     "check": "check",
     "next": "next",
     "nextPlayer": "next player",
+    "completed": "Completed!",
     "close": "close"
   },
   "ru": {
@@ -25,6 +26,7 @@
     "check": "проверить",
     "next": "дальше",
     "nextPlayer": "следующий игрок",
+    "completed": "Завершено!",
     "close": "закрыть"
   },
   "uk": {
@@ -39,6 +41,7 @@
     "check": "перевірити",
     "next": "далі",
     "nextPlayer": "наступний гравець",
+    "completed": "Завершено!",
     "close": "закрити"
   }
 }
