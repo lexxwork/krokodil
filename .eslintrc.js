@@ -9,7 +9,7 @@ module.exports = {
     '@vue/standard'
   ],
   parserOptions: {
-    parser: '@babel/eslint-parser',
+    parser: 'babel-eslint'
     ecmaVersion: 11
   },
   rules: {
