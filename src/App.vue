@@ -51,6 +51,7 @@ import WordsWizard from './components/WordsWizard.vue'
 
 const DEBUG = process.env.VUE_APP_DEBUG === 'true'
 const PRODUCTION = process.env.NODE_ENV === 'production'
+// eslint-disable-next-line
 const log = (...args) => DEBUG && console.log(args)
 
 const countDownSound = new Audio(require('@/assets/sounds/stopwatch.mp3'))
